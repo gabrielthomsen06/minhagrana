@@ -15,14 +15,17 @@ router = APIRouter(tags=["transactions"])
 def create_transaction(transaction: schemas.TransactionCreate, db: Session = Depends(get_db)):
     if transaction.installment_total and transaction.installment_total > 1:
         group_id = uuid.uuid4()
-        amount_per_installment = Decimal(str(transaction.amount)) / transaction.installment_total
-        amount_per_installment = round(amount_per_installment, 2)
+        total = Decimal(str(transaction.amount))
+        base_amount = round(total / transaction.installment_total, 2)
+        remainder = round(total - base_amount * transaction.installment_total, 2)
         first = None
         for i in range(1, transaction.installment_total + 1):
             installment_date = transaction.date + relativedelta(months=i - 1)
+            # Add rounding remainder to the last installment so the sum equals the original amount
+            amount = base_amount + remainder if i == transaction.installment_total else base_amount
             db_transaction = models.Transaction(
                 type=transaction.type,
-                amount=amount_per_installment,
+                amount=amount,
                 description=transaction.description,
                 category_id=transaction.category_id,
                 bank_id=transaction.bank_id,
