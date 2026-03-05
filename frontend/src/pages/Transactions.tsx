@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { getTransactions, createTransaction, updateTransaction, deleteTransaction, getCategories, getBanks, getPaymentMethods } from '../services/api'
@@ -27,13 +27,13 @@ export default function Transactions() {
   const [editTransaction, setEditTransaction] = useState<Transaction | null>(null)
   const [deleteModal, setDeleteModal] = useState<{ open: boolean; transaction: Transaction | null }>({ open: false, transaction: null })
 
-  const load = () => {
+  const load = useCallback(() => {
     const params: Record<string, unknown> = { month, year }
     if (type) params.type = type
     if (categoryId) params.category_id = categoryId
     if (bankId) params.bank_id = bankId
     getTransactions(params).then(setTransactions)
-  }
+  }, [month, year, type, categoryId, bankId])
 
   useEffect(() => {
     Promise.all([getCategories(), getBanks(), getPaymentMethods()]).then(([c, b, p]) => {
@@ -41,7 +41,7 @@ export default function Transactions() {
     })
   }, [])
 
-  useEffect(() => { load() }, [month, year, type, categoryId, bankId])
+  useEffect(() => { load() }, [load])
 
   const handleSubmit = async (data: Record<string, unknown>) => {
     try {
