@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional
 from datetime import date, datetime
 from decimal import Decimal
@@ -22,7 +22,7 @@ class CategoryUpdate(BaseModel):
 class CategoryResponse(CategoryBase):
     id: int
     created_at: datetime
-    model_config = {"from_attributes": True}
+    model_config = ConfigDict(from_attributes=True)
 
 # Bank schemas
 class BankBase(BaseModel):
@@ -37,7 +37,7 @@ class BankUpdate(BaseModel):
 class BankResponse(BankBase):
     id: int
     created_at: datetime
-    model_config = {"from_attributes": True}
+    model_config = ConfigDict(from_attributes=True)
 
 # PaymentMethod schemas
 class PaymentMethodBase(BaseModel):
@@ -52,7 +52,7 @@ class PaymentMethodUpdate(BaseModel):
 class PaymentMethodResponse(PaymentMethodBase):
     id: int
     created_at: datetime
-    model_config = {"from_attributes": True}
+    model_config = ConfigDict(from_attributes=True)
 
 # Transaction schemas
 class TransactionBase(BaseModel):
@@ -68,6 +68,8 @@ class TransactionCreate(TransactionBase):
     installment_total: Optional[int] = None
 
 class TransactionUpdate(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
     type: Optional[TransactionType] = None
     amount: Optional[Decimal] = None
     description: Optional[str] = None
@@ -86,4 +88,4 @@ class TransactionResponse(TransactionBase):
     category: CategoryResponse
     bank: BankResponse
     payment_method: PaymentMethodResponse
-    model_config = {"from_attributes": True}
+    model_config = ConfigDict(from_attributes=True)
