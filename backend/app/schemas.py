@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict
 from typing import Optional
-from datetime import date, datetime
+from datetime import date as DateType, datetime
 from decimal import Decimal
 import uuid
 from app.models import CategoryType, TransactionType
@@ -62,7 +62,7 @@ class TransactionBase(BaseModel):
     category_id: int
     bank_id: int
     payment_method_id: int
-    date: date
+    date: DateType
 
 class TransactionCreate(TransactionBase):
     installment_total: Optional[int] = None
@@ -76,7 +76,7 @@ class TransactionUpdate(BaseModel):
     category_id: Optional[int] = None
     bank_id: Optional[int] = None
     payment_method_id: Optional[int] = None
-    date: Optional[date] = None
+    date: Optional[DateType] = None
 
 class TransactionResponse(TransactionBase):
     id: int
