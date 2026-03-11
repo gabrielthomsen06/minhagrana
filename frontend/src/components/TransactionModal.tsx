@@ -46,22 +46,36 @@ export default function TransactionModal({ isOpen, onClose, onSubmit, transactio
         date: transaction.date,
         installment_total: '',
       })
-    } else {
+    }
+  }, [transaction])
+
+  useEffect(() => {
+    if (!isOpen) {
       setForm({ type: 'expense', amount: '', description: '', category_id: '', bank_id: '', payment_method_id: '', date: new Date().toISOString().split('T')[0], installment_total: '' })
     }
-  }, [transaction, isOpen])
+  }, [isOpen])
 
   if (!isOpen) return null
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+
+    const categoryId = parseInt(form.category_id)
+    const bankId = parseInt(form.bank_id)
+    const paymentMethodId = parseInt(form.payment_method_id)
+    const amount = parseFloat(form.amount)
+
+    if (isNaN(categoryId) || isNaN(bankId) || isNaN(paymentMethodId) || isNaN(amount)) {
+      return
+    }
+
     const data: Record<string, unknown> = {
       type: form.type,
-      amount: parseFloat(form.amount),
+      amount,
       description: form.description,
-      category_id: parseInt(form.category_id),
-      bank_id: parseInt(form.bank_id),
-      payment_method_id: parseInt(form.payment_method_id),
+      category_id: categoryId,
+      bank_id: bankId,
+      payment_method_id: paymentMethodId,
       date: form.date,
     }
     if (!transaction && form.installment_total && parseInt(form.installment_total) > 1) {
