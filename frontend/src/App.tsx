@@ -7,6 +7,7 @@ import Categories from './pages/Categories'
 import Banks from './pages/Banks'
 import PaymentMethods from './pages/PaymentMethods'
 import Export from './pages/Export'
+import VisaoAnual from './pages/VisaoAnual'
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path="/banks" element={<Banks />} />
             <Route path="/payment-methods" element={<PaymentMethods />} />
             <Route path="/export" element={<Export />} />
+            <Route path="/visao-anual" element={<VisaoAnual />} />
           </Routes>
         </main>
       </div>

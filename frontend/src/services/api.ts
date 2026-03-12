@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { Category, Bank, PaymentMethod, Transaction, DashboardSummary, CategoryExpense, MonthlyEvolution } from '../types'
+import type { Category, Bank, PaymentMethod, Transaction, DashboardSummary, CategoryExpense, MonthlyEvolution, AnnualVisionData } from '../types'
 
 const api = axios.create({
   baseURL: '/api',
@@ -58,3 +58,7 @@ export const exportCSV = (startDate: string, endDate: string) =>
   api.get('/export/csv', { params: { start_date: startDate, end_date: endDate }, responseType: 'blob' }).then(r => r.data)
 export const exportExcel = (startDate: string, endDate: string) =>
   api.get('/export/excel', { params: { start_date: startDate, end_date: endDate }, responseType: 'blob' }).then(r => r.data)
+
+// Annual Vision
+export const getAnnualVision = (year: number) =>
+  api.get<AnnualVisionData>('/annual-vision', { params: { year } }).then(r => r.data)
