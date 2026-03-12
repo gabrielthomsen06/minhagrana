@@ -57,3 +57,30 @@ export interface MonthlyEvolution {
   income: number
   expenses: number
 }
+
+export interface MonthlyInvestment {
+  month: number
+  description: string
+  amount: number
+}
+
+export interface MonthlySeries {
+  month: number
+  income: number
+  expenses: number
+  investments: number
+}
+
+export interface AnnualVisionData {
+  year: number
+  current_month: number
+  accumulated: {
+    income: number
+    expenses: number
+    investments: number
+    free_balance: number
+  }
+  average_monthly_expense: number
+  monthly_investments: MonthlyInvestment[]
+  monthly_series: MonthlySeries[]
+}

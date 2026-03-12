@@ -1,8 +1,9 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, ArrowLeftRight, Tag, Building2, CreditCard, Download } from 'lucide-react'
+import { LayoutDashboard, ArrowLeftRight, Tag, Building2, CreditCard, Download, CalendarRange } from 'lucide-react'
 
 const links = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+  { to: '/visao-anual', icon: CalendarRange, label: 'Visão Anual' },
   { to: '/transactions', icon: ArrowLeftRight, label: 'Transações' },
   { to: '/categories', icon: Tag, label: 'Categorias' },
   { to: '/banks', icon: Building2, label: 'Bancos' },
