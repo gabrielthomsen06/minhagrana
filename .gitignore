@@ -1,4 +1,6 @@
 backend/app/__pycache__
+backend/bot/__pycache__
+backend/.env
 frontend/node_modules/
 frontend/package-lock.json
 frontend/dist/
