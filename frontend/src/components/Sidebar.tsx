@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, ArrowLeftRight, Tag, Building2, CreditCard, Download, CalendarRange } from 'lucide-react'
+import { LayoutDashboard, ArrowLeftRight, Tag, Building2, CreditCard, Download, CalendarRange, LogOut } from 'lucide-react'
+import { useAuth } from '../contexts/AuthContext'
 
 const links = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -12,6 +13,8 @@ const links = [
 ]
 
 export default function Sidebar() {
+  const { username, logout } = useAuth()
+
   return (
     <aside className="fixed top-0 left-0 h-full w-64 bg-gray-800 border-r border-gray-700 flex flex-col">
       <div className="p-6 border-b border-gray-700">
@@ -36,6 +39,21 @@ export default function Sidebar() {
           </NavLink>
         ))}
       </nav>
+      <div className="p-4 border-t border-gray-700">
+        <div className="flex items-center justify-between">
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-gray-200 truncate">{username}</p>
+            <p className="text-xs text-gray-500">Conectado</p>
+          </div>
+          <button
+            onClick={logout}
+            className="p-2 text-gray-400 hover:text-red-400 hover:bg-gray-700 rounded-lg transition-colors cursor-pointer"
+            title="Sair"
+          >
+            <LogOut size={18} />
+          </button>
+        </div>
+      </div>
     </aside>
   )
 }

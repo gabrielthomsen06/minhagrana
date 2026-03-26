@@ -5,6 +5,10 @@ const api = axios.create({
   baseURL: '/api',
 })
 
+// Auth
+export const loginApi = (username: string, password: string) =>
+  api.post<{ token: string; username: string }>('/auth/login', { username, password }).then(r => r.data)
+
 // Categories
 export const getCategories = (type?: string) =>
   api.get<Category[]>('/categories', { params: type ? { type } : {} }).then(r => r.data)
