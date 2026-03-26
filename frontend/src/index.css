@@ -50,6 +50,11 @@ body {
     transition-all duration-200 cursor-pointer
     focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500/30;
 }
+.glass-select option {
+  background: #0F172A;
+  color: #F8FAFC;
+  padding: 8px 12px;
+}
 
 /* Glass table */
 .glass-table {
