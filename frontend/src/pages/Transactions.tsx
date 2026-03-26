@@ -74,75 +74,81 @@ export default function Transactions() {
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-white">Transações</h1>
-        <button onClick={() => { setEditTransaction(null); setModalOpen(true) }}
-          className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+        <div>
+          <h1 className="page-title">Transações</h1>
+          <p className="text-sm text-gray-500 mt-1">Gerencie suas receitas e despesas</p>
+        </div>
+        <button onClick={() => { setEditTransaction(null); setModalOpen(true) }} className="btn-primary">
           <Plus size={16} /> Nova Transação
         </button>
       </div>
 
       {/* Filters */}
-      <div className="bg-gray-800 rounded-xl p-4 flex flex-wrap gap-3">
-        <select value={month} onChange={e => setMonth(Number(e.target.value))}
-          className="bg-gray-700 border border-gray-600 text-white rounded-lg px-3 py-2 text-sm">
+      <div className="glass-card p-4 flex flex-wrap gap-3">
+        <select value={month} onChange={e => setMonth(Number(e.target.value))} className="glass-select">
           {MONTHS.map((m, i) => <option key={i} value={i + 1}>{m}</option>)}
         </select>
-        <select value={year} onChange={e => setYear(Number(e.target.value))}
-          className="bg-gray-700 border border-gray-600 text-white rounded-lg px-3 py-2 text-sm">
+        <select value={year} onChange={e => setYear(Number(e.target.value))} className="glass-select">
           {[2023, 2024, 2025, 2026].map(y => <option key={y} value={y}>{y}</option>)}
         </select>
-        <select value={type} onChange={e => setType(e.target.value)}
-          className="bg-gray-700 border border-gray-600 text-white rounded-lg px-3 py-2 text-sm">
+        <select value={type} onChange={e => setType(e.target.value)} className="glass-select">
           <option value="">Todos os tipos</option>
           <option value="income">Receita</option>
           <option value="expense">Despesa</option>
         </select>
-        <select value={categoryId} onChange={e => setCategoryId(e.target.value)}
-          className="bg-gray-700 border border-gray-600 text-white rounded-lg px-3 py-2 text-sm">
+        <select value={categoryId} onChange={e => setCategoryId(e.target.value)} className="glass-select">
           <option value="">Todas as categorias</option>
           {categories.map(c => <option key={c.id} value={c.id}>{c.icon} {c.name}</option>)}
         </select>
-        <select value={bankId} onChange={e => setBankId(e.target.value)}
-          className="bg-gray-700 border border-gray-600 text-white rounded-lg px-3 py-2 text-sm">
+        <select value={bankId} onChange={e => setBankId(e.target.value)} className="glass-select">
           <option value="">Todos os bancos</option>
           {banks.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
         </select>
       </div>
 
       {/* Table */}
-      <div className="bg-gray-800 rounded-xl overflow-hidden">
-        <table className="w-full text-sm">
+      <div className="glass-card overflow-hidden">
+        <table className="glass-table">
           <thead>
-            <tr className="border-b border-gray-700 text-gray-400">
-              <th className="text-left px-4 py-3">Data</th>
-              <th className="text-left px-4 py-3">Descrição</th>
-              <th className="text-left px-4 py-3">Categoria</th>
-              <th className="text-left px-4 py-3">Banco</th>
-              <th className="text-left px-4 py-3">Método</th>
-              <th className="text-left px-4 py-3">Parcela</th>
-              <th className="text-right px-4 py-3">Valor</th>
-              <th className="px-4 py-3"></th>
+            <tr>
+              <th className="text-left">Data</th>
+              <th className="text-left">Descrição</th>
+              <th className="text-left">Categoria</th>
+              <th className="text-left">Banco</th>
+              <th className="text-left">Método</th>
+              <th className="text-left">Parcela</th>
+              <th className="text-right">Valor</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             {transactions.length === 0 ? (
-              <tr><td colSpan={8} className="text-center py-8 text-gray-400">Nenhuma transação encontrada</td></tr>
+              <tr><td colSpan={8} className="text-center py-12 text-gray-500">Nenhuma transação encontrada</td></tr>
             ) : transactions.map(t => (
-              <tr key={t.id} className="border-b border-gray-700/50 hover:bg-gray-700/30">
-                <td className="px-4 py-3 text-gray-300">{new Date(t.date + 'T00:00:00').toLocaleDateString('pt-BR')}</td>
-                <td className="px-4 py-3 text-white">{t.description}</td>
-                <td className="px-4 py-3 text-gray-300">{t.category.icon} {t.category.name}</td>
-                <td className="px-4 py-3 text-gray-300">{t.bank.name}</td>
-                <td className="px-4 py-3 text-gray-300">{t.payment_method.name}</td>
-                <td className="px-4 py-3 text-gray-400">{t.installment_total ? `${t.installment_current}/${t.installment_total}` : '-'}</td>
-                <td className={`px-4 py-3 text-right font-semibold ${t.type === 'income' ? 'text-green-400' : 'text-red-400'}`}>
+              <tr key={t.id}>
+                <td className="text-gray-400 tabular-nums">{new Date(t.date + 'T00:00:00').toLocaleDateString('pt-BR')}</td>
+                <td className="text-white font-medium">{t.description}</td>
+                <td className="text-gray-300">
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="text-base">{t.category.icon}</span> {t.category.name}
+                  </span>
+                </td>
+                <td className="text-gray-400">{t.bank.name}</td>
+                <td className="text-gray-400">{t.payment_method.name}</td>
+                <td className="text-gray-500">{t.installment_total ? `${t.installment_current}/${t.installment_total}` : '—'}</td>
+                <td className={`text-right font-semibold tabular-nums ${t.type === 'income' ? 'text-green-400' : 'text-red-400'}`}>
                   {t.type === 'expense' ? '-' : '+'}{formatCurrency(t.amount)}
                 </td>
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-2 justify-end">
-                    <button onClick={() => { setEditTransaction(t); setModalOpen(true) }} className="text-gray-400 hover:text-blue-400"><Pencil size={15} /></button>
-                    <button onClick={() => setDeleteModal({ open: true, transaction: t })} className="text-gray-400 hover:text-red-400"><Trash2 size={15} /></button>
+                <td>
+                  <div className="flex items-center gap-1 justify-end">
+                    <button onClick={() => { setEditTransaction(t); setModalOpen(true) }} className="icon-btn-edit" aria-label="Editar">
+                      <Pencil size={15} />
+                    </button>
+                    <button onClick={() => setDeleteModal({ open: true, transaction: t })} className="icon-btn-delete" aria-label="Excluir">
+                      <Trash2 size={15} />
+                    </button>
                   </div>
                 </td>
               </tr>

@@ -1,19 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  @apply bg-gray-900 text-gray-100;
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  @apply bg-[#020617] text-gray-100;
 }
 
 ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  @apply bg-gray-800;
+  background: #0F172A;
 }
 ::-webkit-scrollbar-thumb {
   @apply bg-gray-600 rounded;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-500;
+}
+
+/* Glass card utility */
+.glass-card {
+  @apply backdrop-blur-xl border rounded-2xl;
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.glass-card-hover {
+  @apply glass-card transition-all duration-200;
+}
+.glass-card-hover:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Glass input */
+.glass-input {
+  @apply bg-white/[0.05] border border-white/[0.08] rounded-xl px-3.5 py-2.5 text-white text-sm
+    placeholder-gray-500 transition-all duration-200
+    focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500/30;
+}
+
+/* Glass select */
+.glass-select {
+  @apply bg-white/[0.05] border border-white/[0.08] rounded-xl px-3.5 py-2.5 text-white text-sm
+    transition-all duration-200 cursor-pointer
+    focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500/30;
+}
+
+/* Glass table */
+.glass-table {
+  @apply w-full text-sm;
+}
+.glass-table thead tr {
+  @apply border-b border-white/[0.06] text-gray-400 text-xs uppercase tracking-wider;
+}
+.glass-table tbody tr {
+  @apply border-b border-white/[0.04] transition-colors duration-150;
+}
+.glass-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+.glass-table tbody tr:last-child {
+  @apply border-0;
+}
+.glass-table th, .glass-table td {
+  @apply px-5 py-3.5;
+}
+
+/* Primary button */
+.btn-primary {
+  @apply flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white
+    bg-gradient-to-r from-green-500 to-emerald-600
+    hover:from-green-400 hover:to-emerald-500
+    shadow-lg shadow-green-500/20 hover:shadow-green-500/30
+    transition-all duration-200 cursor-pointer;
+}
+
+/* Secondary button */
+.btn-secondary {
+  @apply px-4 py-2.5 rounded-xl text-sm font-medium
+    bg-white/[0.05] border border-white/[0.08] text-gray-300
+    hover:bg-white/[0.08] hover:text-white
+    transition-all duration-200 cursor-pointer;
+}
+
+/* Danger button */
+.btn-danger {
+  @apply px-4 py-2.5 rounded-xl text-sm font-medium text-white
+    bg-gradient-to-r from-red-500 to-red-600
+    hover:from-red-400 hover:to-red-500
+    shadow-lg shadow-red-500/20
+    transition-all duration-200 cursor-pointer;
+}
+
+/* Icon action button */
+.icon-btn {
+  @apply p-2 rounded-lg transition-all duration-200 cursor-pointer;
+}
+.icon-btn-edit {
+  @apply icon-btn text-gray-500 hover:text-blue-400 hover:bg-blue-400/10;
+}
+.icon-btn-delete {
+  @apply icon-btn text-gray-500 hover:text-red-400 hover:bg-red-400/10;
+}
+
+/* Page title */
+.page-title {
+  @apply text-2xl font-bold text-white tracking-tight;
 }
 
 /* Login page animations */
@@ -55,4 +152,13 @@ body {
 
 .animation-delay-4000 {
   animation-delay: 4s;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse-slow,
+  .animate-float,
+  .animate-shake {
+    animation: none;
+  }
 }

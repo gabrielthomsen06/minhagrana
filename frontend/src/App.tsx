@@ -27,9 +27,9 @@ function ProtectedLayout() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-900">
+    <div className="flex min-h-screen bg-[#020617]">
       <Sidebar />
-      <main className="flex-1 ml-64 p-6">
+      <main className="flex-1 ml-64 p-8">
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Dashboard />} />
@@ -52,7 +52,18 @@ function App() {
         <Routes>
           <Route path="/*" element={<ProtectedLayout />} />
         </Routes>
-        <Toaster position="top-right" toastOptions={{ style: { background: '#1f2937', color: '#f9fafb' } }} />
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: {
+              background: 'rgba(15, 23, 42, 0.9)',
+              backdropFilter: 'blur(12px)',
+              color: '#f9fafb',
+              border: '1px solid rgba(255, 255, 255, 0.06)',
+              borderRadius: '12px',
+            },
+          }}
+        />
       </AuthProvider>
     </BrowserRouter>
   )
