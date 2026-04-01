@@ -1,14 +1,16 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, ArrowLeftRight, Tag, Building2, CreditCard, Download, CalendarRange, LogOut, DollarSign } from 'lucide-react'
+import { LayoutDashboard, ArrowLeftRight, Tag, Building2, CreditCard, Download, CalendarRange, LogOut, DollarSign, Wallet, TrendingUp } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 
 const links = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/visao-anual', icon: CalendarRange, label: 'Visão Anual' },
+  { to: '/credit-cards', icon: CreditCard, label: 'Cartões de Crédito' },
+  { to: '/investments', icon: TrendingUp, label: 'Investimentos' },
   { to: '/transactions', icon: ArrowLeftRight, label: 'Transações' },
   { to: '/categories', icon: Tag, label: 'Categorias' },
   { to: '/banks', icon: Building2, label: 'Bancos' },
-  { to: '/payment-methods', icon: CreditCard, label: 'Métodos de Pagamento' },
+  { to: '/payment-methods', icon: Wallet, label: 'Métodos de Pagamento' },
   { to: '/export', icon: Download, label: 'Exportar' },
 ]
 

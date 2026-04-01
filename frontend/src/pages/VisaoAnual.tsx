@@ -4,8 +4,8 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, Tooltip,
   ResponsiveContainer, ReferenceLine, AreaChart, Area,
 } from 'recharts'
-import { getAnnualVision } from '../services/api'
-import type { AnnualVisionData } from '../types'
+import { getAnnualVision, getInvestmentPortfolio } from '../services/api'
+import type { AnnualVisionData, InvestmentPortfolio } from '../types'
 
 const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 
@@ -77,11 +77,16 @@ export default function VisaoAnual() {
   const [salarioLiquido, setSalarioLiquido] = useLocalNumber('minhagrana_salario_liquido', 0)
   const [metaAnual, setMetaAnual] = useLocalNumber('minhagrana_meta_investimento_anual', 0)
 
+  const [portfolio, setPortfolio] = useState<InvestmentPortfolio | null>(null)
+
   const [aporteMensal, setAporteMensal] = useState(500)
   const [taxaAnual, setTaxaAnual] = useState(12)
   const [periodo, setPeriodo] = useState(10)
 
-  useEffect(() => { getAnnualVision(year).then(setData) }, [year])
+  useEffect(() => {
+    getAnnualVision(year).then(setData)
+    getInvestmentPortfolio().then(setPortfolio)
+  }, [year])
 
   const currentMonth = data?.current_month ?? 0
   const accumulated = data?.accumulated ?? { income: 0, expenses: 0, investments: 0, free_balance: 0 }
@@ -174,6 +179,46 @@ export default function VisaoAnual() {
           </div>
         </div>
       </div>
+
+      {/* Investment Projection */}
+      {portfolio && portfolio.total_balance > 0 && (() => {
+        const monthlyRate = Math.pow(1 + 0.12, 1 / 12) - 1
+        const monthlyContrib = 600
+        const remainingMonths = currentMonth > 0 ? 12 - currentMonth : 12
+        let projected = portfolio.total_balance
+        for (let i = 0; i < remainingMonths; i++) {
+          projected = projected * (1 + monthlyRate) + monthlyContrib
+        }
+        const yearEndProjected = projected
+        const gain = yearEndProjected - portfolio.total_balance - (monthlyContrib * remainingMonths)
+        return (
+          <div>
+            <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3">
+              Projecao de Investimentos {year}
+            </h2>
+            <div className="grid grid-cols-4 gap-4">
+              <div className="glass-card p-5 border-green-500/15">
+                <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Patrimonio Atual</p>
+                <p className="text-xl font-bold text-green-400 tabular-nums">{formatCurrency(portfolio.total_balance)}</p>
+              </div>
+              <div className="glass-card p-5 border-blue-500/15">
+                <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Aportes Restantes</p>
+                <p className="text-xl font-bold text-blue-400 tabular-nums">{formatCurrency(monthlyContrib * remainingMonths)}</p>
+                <p className="text-xs text-gray-600 mt-1">{remainingMonths} meses x {formatCurrency(monthlyContrib)}</p>
+              </div>
+              <div className="glass-card p-5 border-amber-500/15">
+                <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Rendimento Estimado</p>
+                <p className="text-xl font-bold text-amber-400 tabular-nums">{formatCurrency(gain)}</p>
+                <p className="text-xs text-gray-600 mt-1">taxa 12% a.a.</p>
+              </div>
+              <div className="glass-card p-5 border-emerald-500/15">
+                <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Patrimonio em Dez/{year}</p>
+                <p className="text-xl font-bold text-emerald-400 tabular-nums">{formatCurrency(yearEndProjected)}</p>
+              </div>
+            </div>
+          </div>
+        )
+      })()}
 
       {/* Monthly Bar Chart */}
       <div className="glass-card p-6">

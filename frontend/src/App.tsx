@@ -9,6 +9,8 @@ import Banks from './pages/Banks'
 import PaymentMethods from './pages/PaymentMethods'
 import Export from './pages/Export'
 import VisaoAnual from './pages/VisaoAnual'
+import CreditCards from './pages/CreditCards'
+import Investments from './pages/Investments'
 import Login from './pages/Login'
 
 function ProtectedLayout() {
@@ -39,6 +41,8 @@ function ProtectedLayout() {
           <Route path="/payment-methods" element={<PaymentMethods />} />
           <Route path="/export" element={<Export />} />
           <Route path="/visao-anual" element={<VisaoAnual />} />
+          <Route path="/credit-cards" element={<CreditCards />} />
+          <Route path="/investments" element={<Investments />} />
         </Routes>
       </main>
     </div>

@@ -28,6 +28,8 @@ class Bank(Base):
     __tablename__ = "banks"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, nullable=False)
+    closing_day = Column(Integer, nullable=True)
+    credit_limit = Column(Numeric(10, 2), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     transactions = relationship("Transaction", back_populates="bank")
 
@@ -37,6 +39,16 @@ class PaymentMethod(Base):
     name = Column(String, unique=True, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     transactions = relationship("Transaction", back_populates="payment_method")
+
+class InvestmentAccount(Base):
+    __tablename__ = "investment_accounts"
+    id = Column(Integer, primary_key=True, index=True)
+    bank_id = Column(Integer, ForeignKey("banks.id"), nullable=False)
+    balance = Column(Numeric(12, 2), nullable=False, default=0)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    bank = relationship("Bank")
+
 
 class Transaction(Base):
     __tablename__ = "transactions"

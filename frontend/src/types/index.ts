@@ -12,6 +12,8 @@ export interface Category {
 export interface Bank {
   id: number
   name: string
+  closing_day?: number | null
+  credit_limit?: number | null
   created_at: string
 }
 
@@ -44,6 +46,76 @@ export interface DashboardSummary {
   income: number
   expenses: number
   balance: number
+  debit_expenses: number
+  credit_expenses: number
+  real_balance: number
+}
+
+export interface CreditCardSummary {
+  bank_id: number
+  bank_name: string
+  closing_day: number
+  credit_limit: number
+  current_invoice_total: number
+  available_limit: number
+  period_start: string
+  period_end: string
+}
+
+export interface CreditCardInvoiceTransaction {
+  id: number
+  description: string
+  amount: number
+  date: string
+  category_name: string
+  category_icon?: string
+  installment_current?: number
+  installment_total?: number
+}
+
+export interface CreditCardInvoice {
+  bank_id: number
+  bank_name: string
+  closing_day: number
+  credit_limit: number
+  invoice_total: number
+  available_limit: number
+  period_start: string
+  period_end: string
+  transactions: CreditCardInvoiceTransaction[]
+}
+
+export interface InvestmentAccountItem {
+  id: number
+  bank_id: number
+  bank_name: string
+  balance: number
+  percentage: number
+  updated_at: string | null
+}
+
+export interface InvestmentPortfolio {
+  total_balance: number
+  accounts: InvestmentAccountItem[]
+}
+
+export interface ContributionTransaction {
+  description: string
+  amount: number
+  date: string
+  bank_name: string
+}
+
+export interface MonthlyContribution {
+  month: number
+  total: number
+  transactions: ContributionTransaction[]
+}
+
+export interface InvestmentContributions {
+  year: number
+  total_contributed: number
+  monthly: MonthlyContribution[]
 }
 
 export interface CategoryExpense {

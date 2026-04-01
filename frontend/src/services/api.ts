@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { Category, Bank, PaymentMethod, Transaction, DashboardSummary, CategoryExpense, MonthlyEvolution, AnnualVisionData } from '../types'
+import type { Category, Bank, PaymentMethod, Transaction, DashboardSummary, CategoryExpense, MonthlyEvolution, AnnualVisionData, CreditCardSummary, CreditCardInvoice, InvestmentPortfolio, InvestmentContributions } from '../types'
 
 const api = axios.create({
   baseURL: '/api',
@@ -56,6 +56,24 @@ export const getDashboardByCategory = (month: number, year: number) =>
   api.get<CategoryExpense[]>('/dashboard/by-category', { params: { month, year } }).then(r => r.data)
 export const getMonthlyEvolution = (year: number) =>
   api.get<MonthlyEvolution[]>('/dashboard/monthly-evolution', { params: { year } }).then(r => r.data)
+
+// Credit Cards
+export const getCreditCardsSummary = (month: number, year: number) =>
+  api.get<CreditCardSummary[]>('/credit-cards/summary', { params: { month, year } }).then(r => r.data)
+export const getCreditCardInvoice = (bankId: number, month: number, year: number) =>
+  api.get<CreditCardInvoice>('/credit-cards/invoice', { params: { bank_id: bankId, month, year } }).then(r => r.data)
+
+// Investments
+export const getInvestmentPortfolio = () =>
+  api.get<InvestmentPortfolio>('/investments/portfolio').then(r => r.data)
+export const createInvestmentAccount = (data: { bank_id: number; balance: number }) =>
+  api.post('/investments/portfolio', data).then(r => r.data)
+export const updateInvestmentAccount = (id: number, data: { balance: number }) =>
+  api.put(`/investments/portfolio/${id}`, data).then(r => r.data)
+export const deleteInvestmentAccount = (id: number) =>
+  api.delete(`/investments/portfolio/${id}`)
+export const getInvestmentContributions = (year: number) =>
+  api.get<InvestmentContributions>('/investments/contributions', { params: { year } }).then(r => r.data)
 
 // Export
 export const exportCSV = (startDate: string, endDate: string) =>

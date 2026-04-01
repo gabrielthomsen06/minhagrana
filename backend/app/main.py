@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine, Base
-from app.routers import transactions, categories, banks, payment_methods, dashboard, export, annual_vision, auth
+from app.routers import transactions, categories, banks, payment_methods, dashboard, export, annual_vision, auth, credit_cards, investments
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -27,6 +27,8 @@ app.include_router(dashboard.router, prefix="/api")
 app.include_router(export.router, prefix="/api")
 app.include_router(annual_vision.router, prefix="/api")
 app.include_router(auth.router, prefix="/api")
+app.include_router(credit_cards.router, prefix="/api")
+app.include_router(investments.router, prefix="/api")
 
 @app.get("/")
 def root():

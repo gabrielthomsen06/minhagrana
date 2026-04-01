@@ -14,11 +14,26 @@ def get_summary(month: int = Query(...), year: int = Query(...), db: Session = D
         extract("year", models.Transaction.date) == year,
     )
     income = base_query.filter(models.Transaction.type == "income").with_entities(func.sum(models.Transaction.amount)).scalar() or 0
-    expenses = base_query.filter(models.Transaction.type == "expense").with_entities(func.sum(models.Transaction.amount)).scalar() or 0
+    total_expenses = base_query.filter(models.Transaction.type == "expense").with_entities(func.sum(models.Transaction.amount)).scalar() or 0
+
+    # Separar despesas no crédito (não saem do bolso agora) das despesas à vista (saem imediatamente)
+    credit_method = db.query(models.PaymentMethod).filter(models.PaymentMethod.name == "Crédito").first()
+    credit_expenses = 0
+    if credit_method:
+        credit_expenses = base_query.filter(
+            models.Transaction.type == "expense",
+            models.Transaction.payment_method_id == credit_method.id,
+        ).with_entities(func.sum(models.Transaction.amount)).scalar() or 0
+
+    debit_expenses = float(total_expenses) - float(credit_expenses)
+
     return {
         "income": float(income),
-        "expenses": float(expenses),
-        "balance": float(income) - float(expenses),
+        "expenses": float(total_expenses),
+        "balance": float(income) - float(total_expenses),
+        "debit_expenses": debit_expenses,
+        "credit_expenses": float(credit_expenses),
+        "real_balance": float(income) - debit_expenses,
     }
 
 @router.get("/dashboard/by-category")

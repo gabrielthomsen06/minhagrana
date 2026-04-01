@@ -27,16 +27,59 @@ class CategoryResponse(CategoryBase):
 # Bank schemas
 class BankBase(BaseModel):
     name: str
+    closing_day: Optional[int] = None
+    credit_limit: Optional[Decimal] = None
 
 class BankCreate(BankBase):
     pass
 
 class BankUpdate(BaseModel):
     name: Optional[str] = None
+    closing_day: Optional[int] = None
+    credit_limit: Optional[Decimal] = None
 
 class BankResponse(BankBase):
     id: int
     created_at: datetime
+    model_config = ConfigDict(from_attributes=True)
+
+# Credit Card schemas
+class CreditCardSummary(BaseModel):
+    bank_id: int
+    bank_name: str
+    closing_day: int
+    credit_limit: float
+    current_invoice_total: float
+    available_limit: float
+    period_start: str
+    period_end: str
+
+class CreditCardInvoiceDetail(BaseModel):
+    bank_id: int
+    bank_name: str
+    closing_day: int
+    credit_limit: float
+    invoice_total: float
+    available_limit: float
+    period_start: str
+    period_end: str
+    transactions: list[dict]
+
+# InvestmentAccount schemas
+class InvestmentAccountCreate(BaseModel):
+    bank_id: int
+    balance: Decimal
+
+class InvestmentAccountUpdate(BaseModel):
+    balance: Decimal
+
+class InvestmentAccountResponse(BaseModel):
+    id: int
+    bank_id: int
+    balance: Decimal
+    bank: BankResponse
+    created_at: datetime
+    updated_at: datetime
     model_config = ConfigDict(from_attributes=True)
 
 # PaymentMethod schemas

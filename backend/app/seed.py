@@ -31,15 +31,37 @@ def seed():
             if not db.query(models.Category).filter(models.Category.name == name).first():
                 db.add(models.Category(name=name, type=ctype, icon=icon))
 
-        # Banks
-        for bank_name in ["Itaú", "XP"]:
-            if not db.query(models.Bank).filter(models.Bank.name == bank_name).first():
-                db.add(models.Bank(name=bank_name))
+        # Banks (com dados de cartão de crédito)
+        bank_data = [
+            {"name": "Itaú", "closing_day": 25, "credit_limit": 2600.00},
+            {"name": "XP", "closing_day": 27, "credit_limit": 2000.00},
+        ]
+        for bd in bank_data:
+            existing = db.query(models.Bank).filter(models.Bank.name == bd["name"]).first()
+            if existing:
+                existing.closing_day = bd["closing_day"]
+                existing.credit_limit = bd["credit_limit"]
+            else:
+                db.add(models.Bank(**bd))
 
         # Payment methods
         for pm_name in ["Débito", "Crédito"]:
             if not db.query(models.PaymentMethod).filter(models.PaymentMethod.name == pm_name).first():
                 db.add(models.PaymentMethod(name=pm_name))
+
+        # Investment accounts
+        inv_data = [
+            {"bank_name": "XP", "balance": 9900.00},
+            {"bank_name": "Itaú", "balance": 2400.00},
+        ]
+        for inv in inv_data:
+            bank = db.query(models.Bank).filter(models.Bank.name == inv["bank_name"]).first()
+            if bank:
+                existing = db.query(models.InvestmentAccount).filter(
+                    models.InvestmentAccount.bank_id == bank.id
+                ).first()
+                if not existing:
+                    db.add(models.InvestmentAccount(bank_id=bank.id, balance=inv["balance"]))
 
         db.commit()
         print("Seed concluído com sucesso!")
