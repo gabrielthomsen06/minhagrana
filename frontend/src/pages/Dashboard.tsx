@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { TrendingUp, TrendingDown, DollarSign, Wallet, CreditCard, ArrowUpRight, ArrowDownRight } from 'lucide-react'
 import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from 'recharts'
 import { getDashboardSummary, getDashboardByCategory, getMonthlyEvolution, getTransactions, getCreditCardsSummary } from '../services/api'
@@ -20,6 +20,19 @@ export default function Dashboard() {
   const [evolution, setEvolution] = useState<MonthlyEvolution[]>([])
   const [recentTransactions, setRecentTransactions] = useState<Transaction[]>([])
   const [creditCards, setCreditCards] = useState<CreditCardSummary[]>([])
+
+  const chartCategories = useMemo(() => {
+    if (byCategory.length === 0) return []
+    const total = byCategory.reduce((sum, c) => sum + c.total, 0)
+    if (total === 0) return byCategory
+    const significant = byCategory.filter(c => (c.total / total) >= 0.05)
+    const others = byCategory.filter(c => (c.total / total) < 0.05)
+    const othersTotal = others.reduce((sum, c) => sum + c.total, 0)
+    if (othersTotal > 0) {
+      return [...significant, { category: 'Outros', total: othersTotal }]
+    }
+    return significant
+  }, [byCategory])
 
   useEffect(() => {
     Promise.all([
@@ -173,13 +186,13 @@ export default function Dashboard() {
       <div className="grid grid-cols-2 gap-6">
         <div className="glass-card p-6">
           <h2 className="text-base font-semibold text-white mb-5">Despesas por Categoria</h2>
-          {byCategory.length === 0 ? (
+          {chartCategories.length === 0 ? (
             <p className="text-gray-500 text-sm text-center py-12">Sem dados para este periodo</p>
           ) : (
             <ResponsiveContainer width="100%" height={260}>
               <PieChart>
                 <Pie
-                  data={byCategory}
+                  data={chartCategories}
                   dataKey="total"
                   nameKey="category"
                   cx="50%"
@@ -189,7 +202,7 @@ export default function Dashboard() {
                   strokeWidth={0}
                   label={({ category, percent }) => `${category} ${(percent * 100).toFixed(0)}%`}
                 >
-                  {byCategory.map((_, index) => <Cell key={index} fill={COLORS[index % COLORS.length]} />)}
+                  {chartCategories.map((entry, index) => <Cell key={index} fill={entry.category === 'Outros' ? '#64748b' : COLORS[index % COLORS.length]} />)}
                 </Pie>
                 <Tooltip
                   formatter={(v: number) => formatCurrency(v)}
