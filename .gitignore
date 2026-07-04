@@ -1,7 +1,11 @@
-backend/app/__pycache__
-backend/bot/__pycache__
+# Python
+__pycache__/
+*.pyc
+backend/venv/
 backend/.env
+.pytest_cache/
+
+# Frontend
 frontend/node_modules/
 frontend/package-lock.json
 frontend/dist/
-
