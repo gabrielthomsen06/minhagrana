@@ -1,17 +1,12 @@
+import secrets
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-import hashlib
-import secrets
-import os
 
-router = APIRouter()
+from app.config import settings
+from app.security import create_access_token, verify_password
 
-# Credenciais configuráveis via .env (fallback para valores padrão)
-ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "gabriel.andre")
-ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "Gta090306_")
-
-# Token simples em memória (reinicia com o servidor)
-active_tokens: set[str] = set()
+router = APIRouter(tags=["auth"])
 
 
 class LoginRequest(BaseModel):
@@ -26,22 +21,8 @@ class LoginResponse(BaseModel):
 
 @router.post("/auth/login", response_model=LoginResponse)
 def login(data: LoginRequest):
-    if data.username != ADMIN_USERNAME or data.password != ADMIN_PASSWORD:
+    username_ok = secrets.compare_digest(data.username, settings.admin_username)
+    password_ok = verify_password(data.password, settings.admin_password_hash)
+    if not (username_ok and password_ok):
         raise HTTPException(status_code=401, detail="Usuário ou senha inválidos")
-
-    token = secrets.token_hex(32)
-    active_tokens.add(token)
-    return LoginResponse(token=token, username=data.username)
-
-
-@router.post("/auth/verify")
-def verify_token(token: str):
-    if token not in active_tokens:
-        raise HTTPException(status_code=401, detail="Token inválido")
-    return {"valid": True}
-
-
-@router.post("/auth/logout")
-def logout(token: str):
-    active_tokens.discard(token)
-    return {"message": "Logout realizado com sucesso"}
+    return LoginResponse(token=create_access_token(data.username), username=data.username)
