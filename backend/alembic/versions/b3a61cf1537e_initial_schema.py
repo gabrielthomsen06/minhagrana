@@ -93,4 +93,6 @@ def downgrade() -> None:
     op.drop_table('categories')
     op.drop_index(op.f('ix_banks_id'), table_name='banks')
     op.drop_table('banks')
+    sa.Enum(name="transactiontype").drop(op.get_bind(), checkfirst=True)
+    sa.Enum(name="categorytype").drop(op.get_bind(), checkfirst=True)
     # ### end Alembic commands ###
