@@ -1,8 +1,9 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine, Base
 from app.routers import transactions, categories, banks, payment_methods, dashboard, export, annual_vision, auth, credit_cards, investments
+from app.security import require_auth
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -19,16 +20,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(transactions.router, prefix="/api")
-app.include_router(categories.router, prefix="/api")
-app.include_router(banks.router, prefix="/api")
-app.include_router(payment_methods.router, prefix="/api")
-app.include_router(dashboard.router, prefix="/api")
-app.include_router(export.router, prefix="/api")
-app.include_router(annual_vision.router, prefix="/api")
+protected = [Depends(require_auth)]
+
 app.include_router(auth.router, prefix="/api")
-app.include_router(credit_cards.router, prefix="/api")
-app.include_router(investments.router, prefix="/api")
+app.include_router(transactions.router, prefix="/api", dependencies=protected)
+app.include_router(categories.router, prefix="/api", dependencies=protected)
+app.include_router(banks.router, prefix="/api", dependencies=protected)
+app.include_router(payment_methods.router, prefix="/api", dependencies=protected)
+app.include_router(dashboard.router, prefix="/api", dependencies=protected)
+app.include_router(export.router, prefix="/api", dependencies=protected)
+app.include_router(annual_vision.router, prefix="/api", dependencies=protected)
+app.include_router(credit_cards.router, prefix="/api", dependencies=protected)
+app.include_router(investments.router, prefix="/api", dependencies=protected)
 
 @app.get("/")
 def root():
