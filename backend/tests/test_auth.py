@@ -14,3 +14,8 @@ def test_login_wrong_password(client):
 def test_login_wrong_username(client):
     resp = client.post("/api/auth/login", json={"username": "outro", "password": "testpass"})
     assert resp.status_code == 401
+
+
+def test_login_non_ascii_username(client):
+    resp = client.post("/api/auth/login", json={"username": "usuário", "password": "testpass"})
+    assert resp.status_code == 401

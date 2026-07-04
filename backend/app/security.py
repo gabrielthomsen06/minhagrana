@@ -44,4 +44,11 @@ def require_auth(
             detail="Token inválido ou expirado",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    return payload["sub"]
+    username = payload.get("sub")
+    if username is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Token inválido ou expirado",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return username

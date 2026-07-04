@@ -21,7 +21,9 @@ class LoginResponse(BaseModel):
 
 @router.post("/auth/login", response_model=LoginResponse)
 def login(data: LoginRequest):
-    username_ok = secrets.compare_digest(data.username, settings.admin_username)
+    username_ok = secrets.compare_digest(
+        data.username.encode(), settings.admin_username.encode()
+    )
     password_ok = verify_password(data.password, settings.admin_password_hash)
     if not (username_ok and password_ok):
         raise HTTPException(status_code=401, detail="Usuário ou senha inválidos")
