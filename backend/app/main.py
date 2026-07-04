@@ -1,13 +1,26 @@
-from fastapi import FastAPI, Depends
+import logging
+
+from fastapi import FastAPI, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from app.config import settings
 from app.routers import transactions, categories, banks, payment_methods, dashboard, export, annual_vision, auth, credit_cards, investments
 from app.security import require_auth
 
+logger = logging.getLogger("minhagrana")
+
 app = FastAPI(title="Minha Grana API")
+
+
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(request: Request, exc: Exception):
+    logger.exception("Erro não tratado em %s %s", request.method, request.url.path)
+    return JSONResponse(status_code=500, content={"detail": "Erro interno do servidor"})
+
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=settings.cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
