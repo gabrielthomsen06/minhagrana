@@ -5,6 +5,28 @@ const api = axios.create({
   baseURL: '/api',
 })
 
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('auth_token')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const isLoginRequest = error.config?.url?.includes('/auth/login')
+    if (error.response?.status === 401 && !isLoginRequest) {
+      // Token expirado ou inválido: volta para a tela de login
+      localStorage.removeItem('auth_token')
+      localStorage.removeItem('auth_user')
+      window.location.reload()
+    }
+    return Promise.reject(error)
+  }
+)
+
 // Auth
 export const loginApi = (username: string, password: string) =>
   api.post<{ token: string; username: string }>('/auth/login', { username, password }).then(r => r.data)
