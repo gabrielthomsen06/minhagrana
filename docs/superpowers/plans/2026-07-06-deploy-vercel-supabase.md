@@ -307,7 +307,6 @@ curl -s -o /dev/null -w "%{http_code}\n" <URL>/                       # 200 (SPA
 curl -s -o /dev/null -w "%{http_code}\n" <URL>/dashboard              # 200 (fallback SPA)
 curl -s -o /dev/null -w "%{http_code}\n" <URL>/api/categories         # 401 (protegida)
 curl -s -X POST <URL>/api/auth/login -H "Content-Type: application/json" -d '{"username":"x","password":"y"}' -o /dev/null -w "%{http_code}\n"   # 401 (login público, credencial errada)
-curl -s -o /dev/null -w "%{http_code}\n" <URL>/docs                   # 200
 ```
 
 - [ ] **Step 4 (usuário):** Abrir a URL no celular/navegador, logar com as credenciais reais, criar uma transação de teste e confirmar que aparece no dashboard. (O executor não conhece a senha — este passo é humano por design.)

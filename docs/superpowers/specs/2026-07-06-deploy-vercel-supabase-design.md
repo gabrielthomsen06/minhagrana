@@ -63,7 +63,8 @@ Deploy contínuo: projeto Vercel conectado ao repo GitHub (`gabrielthomsen06/min
 ### 6. Verificação
 
 - Local: `npm run build` limpo; `pytest` 10/10 (contra Supabase após a troca do `.env`).
-- Pós-deploy: login no domínio Vercel; criar e listar uma transação; conferir 401 sem token via curl no domínio público; conferir que `/docs` responde.
+- Pós-deploy: login no domínio Vercel; criar e listar uma transação; conferir 401 sem token via curl no domínio público.
+- Nota: o Swagger (`/docs`) do FastAPI **não** fica acessível em produção — só `/api/*` chega à função; `/docs` cai no fallback do SPA. Intencional: não expor a documentação interativa publicamente.
 
 ## Fora do escopo
 
