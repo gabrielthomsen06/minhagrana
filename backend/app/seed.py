@@ -2,10 +2,8 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app.database import SessionLocal, engine, Base
+from app.database import SessionLocal
 from app import models
-
-Base.metadata.create_all(bind=engine)
 
 def seed():
     db = SessionLocal()
