@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { getCategories, createCategory, updateCategory, deleteCategory } from '../services/api'
-import type { Category } from '../types'
+import type { Category, CategoryType } from '../types'
 import DeleteConfirmModal from '../components/DeleteConfirmModal'
 
 export default function Categories() {
   const [categories, setCategories] = useState<Category[]>([])
-  const [form, setForm] = useState({ name: '', type: 'expense', icon: '' })
+  const [form, setForm] = useState<{ name: string; type: CategoryType; icon: string }>({ name: '', type: 'expense', icon: '' })
   const [editing, setEditing] = useState<Category | null>(null)
   const [showForm, setShowForm] = useState(false)
   const [deleteModal, setDeleteModal] = useState<{ open: boolean; id: number | null }>({ open: false, id: null })
@@ -56,7 +56,7 @@ export default function Categories() {
             </div>
             <div>
               <label className="block text-xs text-gray-500 uppercase tracking-wider mb-1.5">Tipo</label>
-              <select value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))} className="glass-select">
+              <select value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value as CategoryType }))} className="glass-select">
                 <option value="expense">Despesa</option>
                 <option value="income">Receita</option>
                 <option value="both">Ambos</option>
